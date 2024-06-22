@@ -1,48 +1,71 @@
-import io
-import json
+from flask import Flask, request, render_template, url_for
 import os
+import sys
+from werkzeug.utils import secure_filename
 
-from torchvision import models
-import torchvision.transforms as transforms
-from PIL import Image
-from flask import Flask, jsonify, render_template, request
+# 외부 스크립트 폴더 경로 추가
+sys.path.append(os.path.join(os.path.dirname(__file__), 'stable-diffusion-pytorch'))
+sys.path.append(os.path.join(os.path.dirname(__file__), 'CartoonGAN-Test-Pytorch-Torch'))
+from create import create_img
+from convert import convert_image
 
 app = Flask(__name__)
-imagenet_class_index = json.load(open('imagenet_class_index.json'))
-model = models.densenet121(weights='IMAGENET1K_V1')
-model.eval()
 
+# 업로드 폴더 설정
+UPLOAD_FOLDER = 'static/generated_images'
+CONVERTED_FOLDER = 'static/converted_images'
 
-def transform_image(image_bytes):
-    my_transforms = transforms.Compose([transforms.Resize(255),
-                                        transforms.CenterCrop(224),
-                                        transforms.ToTensor(),
-                                        transforms.Normalize(
-                                            [0.485, 0.456, 0.406],
-                                            [0.229, 0.224, 0.225])])
-    image = Image.open(io.BytesIO(image_bytes))
-    return my_transforms(image).unsqueeze(0)
+if not os.path.exists(UPLOAD_FOLDER):
+    os.makedirs(UPLOAD_FOLDER)
 
+if not os.path.exists(CONVERTED_FOLDER):
+    os.makedirs(CONVERTED_FOLDER)
 
-def get_prediction(image_bytes):
-    tensor = transform_image(image_bytes=image_bytes)
-    outputs = model.forward(tensor)
-    _, y_hat = outputs.max(1)
-    predicted_idx = str(y_hat.item())
-    return imagenet_class_index[predicted_idx]
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['CONVERTED_FOLDER'] = CONVERTED_FOLDER
 
-
-@app.route('/', methods=['GET'])
-def hello_word():
+@app.route('/')
+def home():
     return render_template('index.html')
 
-@app.route('/predict', methods=['POST'])
-def predict():
-    file = request.files['imagefile']
-    img_bytes = file.read()
-    class_id, class_name = get_prediction(image_bytes=img_bytes)
-    classification = class_name
-    return render_template('index.html', prediction=classification)
+@app.route('/result', methods=['POST'])
+def result():
+    user_text = request.form['user_text']
+    image = create_img(user_text)
+
+    # 파일 이름 생성 및 저장
+    filename = secure_filename(f"{user_text}.png")  # 텍스트의 앞 10자를 파일 이름으로 사용
+    filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+    image.save(filepath, 'PNG')
+
+    image_url = url_for('static', filename=f'generated_images/{filename}')
+    return render_template('result.html', user_text=user_text, image_url=image_url)
+
+
+@app.route('/convert', methods=['POST'])
+def convert():
+    user_text = request.form['user_text']
+
+    print(user_text)
+    file = user_text.replace(" ", "_")
+    print(file)
+
+    style = 'Shinkai'
+
+    filename = secure_filename(f"{file}.png")  # 텍스트의 앞 10자를 파일 이름으로 사용
+
+    # 파일 변환
+    filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+
+
+    # 파일 저장
+    output_filename = secure_filename(f"{file}_{style}.jpg")  # 텍스트의 앞 10자를 파일 이름으로 사용
+    output_path = url_for('static', filename=f'converted_images')
+
+    # 파일을 저장하고 경로만 반환해준다.
+    convert_image(filepath, output_filename, style, output_path)
+
+    return render_template('convert.html', user_text=user_text, image_url=output_path + '/' + output_filename)
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)

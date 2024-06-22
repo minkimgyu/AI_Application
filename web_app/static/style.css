@@ -1,0 +1,135 @@
+/* style.css */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.container {
+    display: flex;
+    width: 80vh;
+
+    background: white;
+    padding: 2em;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.left-pane, .right-pane {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+select {
+  padding: 0.5em; /* 내부 여백 */
+  width: 85%; /* 너비 */
+  margin-bottom: 1em; /* 아래쪽 여백 */
+  border: 1px solid #ccc; /* 테두리 */
+  border-radius: 5px; /* 둥근 모서리 */
+  background: white; /* 배경색 */
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); /* 약간의 그림자 */
+  -webkit-appearance: none; /* 기본 스타일 제거 (웹킷 브라우저) */
+  -moz-appearance: none; /* 기본 스타일 제거 (모질라 브라우저) */
+  appearance: none; /* 기본 스타일 제거 (다른 브라우저) */
+  font-size: 1em; /* 글꼴 크기 */
+  color: #333; /* 글자 색 */
+}
+
+select:focus {
+  border-color: #4d90fe; /* 포커스 시 테두리 색상 변경 */
+  outline: none; /* 포커스시 아웃라인 제거 */
+}
+
+h1 {
+    color: #333;
+    margin-bottom: 10px; /* 예시로 10px 설정, 원하는 크기로 조정 가능 */
+    font-size: 4em; /* 예시로 2em 사용, 원하는 크기로 조정 가능 */
+}
+
+form {
+    margin-top: 1em;
+}
+
+input[type="text"] {
+  padding: 0.7em; /* 내부 여백 */
+  width: 80%; /* 너비 */
+  margin-bottom: 1em; /* 아래 여백 */
+  border: 1px solid #ccc; /* 테두리 */
+  border-radius: 5px; /* 테두리 둥글게 */
+  outline: none; /* 포커스시 테두리 제거 */
+  transition: border-color 0.3s ease-in-out; /* 부드러운 테두리 전환 */
+}
+
+input[type="file"] {
+  padding: 0.7em; /* 내부 여백 */
+  width: 80%; /* 너비 */
+  margin-bottom: 1em; /* 아래 여백 */
+  border: 1px solid #ccc; /* 테두리 */
+  border-radius: 5px; /* 테두리 둥글게 */
+  outline: none; /* 포커스시 테두리 제거 */
+  transition: border-color 0.3s ease-in-out; /* 부드러운 테두리 전환 */
+}
+
+input[type="file"]:hover {
+  border-color: #aaa; /* 마우스 호버시 테두리 색상 변경 */
+}
+
+input[type="file"]:focus {
+  border-color: #4d90fe; /* 포커스시 테두리 색상 변경 */
+}
+
+button {
+    padding: 0.5em 1em;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #218838;
+}
+
+.btn {
+    padding: 0.5em 1em;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none; /* <a> 태그일 경우 밑줄 제거 */
+    display: inline-block; /* <a> 태그를 블록처럼 취급 */
+    text-align: center; /* 가운데 정렬 */
+    transition: background-color 0.3s ease; /* 호버 효과 전환 */
+}
+
+.btn:hover {
+    background-color: #218838;
+}
+
+p {
+    font-size: 1.2em;
+    color: #555;
+}
+
+a {
+    display: inline-block;
+    margin-top: 1em;
+    color: #007bff;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
