@@ -1,8 +1,8 @@
 # Artity
 
 
-![Artity](https://github.com/minkimgyu/AI_Application/assets/48249824/6640355a-f22b-40c9-95cf-feb3e812b4f8)
 
+![image](https://github.com/minkimgyu/AI_Application/assets/48249824/64904bcc-d803-442d-a999-0e3932f6ebc0)
 참고 영상:https://youtu.be/uvFF982BNMM
 
 ## 프로젝트 소개
