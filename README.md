@@ -6,15 +6,18 @@
 참고 영상:https://youtu.be/uvFF982BNMM
 
 ## 프로젝트 소개
-Unity를 사용하여 개발한 FPS 게임
-
-## 개발 기간
-23.09. ~ 24.05.
-
-## 인원
-1인 개발
+pytorch를 사용한 AI를 통해 이미지를 생성, 병합, 필터링 하는 웹사이트입니다.
 
 ## 개발 환경
-* Unity (C#)
+* pytorch (python)
 
-## 기능 설명
+## 참고한 레포지토리
+
+* stable-diffusion-pytorch
+https://github.com/kjsman/stable-diffusion-pytorch
+
+* pytorch-CartoonGAN
+https://github.com/znxlwm/pytorch-CartoonGAN
+
+* style_transfer
+https://github.com/PacktPublishing/PyTorch-Computer-Vision-Cookbook/tree/master
