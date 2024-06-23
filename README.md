@@ -14,10 +14,16 @@ pytorch를 사용한 AI를 통해 이미지를 생성, 병합, 필터링 하는 
 ## 참고한 레포지토리
 
 * stable-diffusion-pytorch
+
+
 https://github.com/kjsman/stable-diffusion-pytorch
 
 * pytorch-CartoonGAN
+
+
 https://github.com/znxlwm/pytorch-CartoonGAN
 
 * style_transfer
+
+
 https://github.com/PacktPublishing/PyTorch-Computer-Vision-Cookbook/tree/master
