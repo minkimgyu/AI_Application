@@ -3,37 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Text Input</title>
+    <title>Artify</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <div class="row_container">
-        <div class="left-pane">
-            <h1>Generate</h1>
-            <p>이미지를 생성합니다.</p>
-            <form action="/result" method="POST" enctype="multipart/form-data">
-                <input type="text" name="prompt" placeholder="Enter text" required>
-                <input type="file" name="img" placeholder="Enter some text" required>
-                <input type="number" name="inferencesteps" min="1" max="40" value="40">
+    <div class="page-header">
+        <h1 class="title">Artify</h1>
+        <h2 class="sub-title">Create your custom images!</h2>
+        </br>
+        <div class="row_container">
+            <div class="left-pane">
+                <h1>Merge</h1>
+                <p>이미지의 스타일을 병합합니다.</p>
+                <form action="/merge" method="POST" enctype="multipart/form-data">
+                    <label for="img2">Source Image</label>
+                    <input type="file" name="img2" placeholder="Enter some text" required>
 
-                <select name="sampler">
-                  <option value="k_lms">k_lms</option>
-                  <option value="k_euler">k_euler</option>
-                  <option value="k_euler_ancestral">k_euler_ancestral</option>
-                </select>
+                    <label for="img3">Style Image</label>
+                    <input type="file" name="img3" placeholder="Enter some text" required>
 
-                </br>
+                    </br>
 
-                <button type="submit">Generate</button>
-            </form>
-        </div>
-        <div class="right-pane">
-            <h1>Filter</h1>
-            <p>이미지에 필터를 씌워줍니다.</p>
-            <form action="/convert" method="POST" enctype="multipart/form-data">
-                <input type="file" name="img1" placeholder="Enter some text" required>
-                <button type="submit">Convert</button>
-            </form>
+                    <button type="submit">Convert</button>
+                </form>
+            </div>
+
+            <div class="middle-pane">
+                <h1>Generate</h1>
+                <p>이미지를 생성합니다.</p>
+                <form action="/result" method="POST" enctype="multipart/form-data">
+
+                    <label for="prompt">Prompt</label>
+                    <input type="text" name="prompt" placeholder="Enter text" required>
+
+                    <label for="img">Clue Image</label>
+                    <input type="file" name="img" placeholder="Enter some text" required>
+
+                    <label for="inferencesteps">Inference Steps</label>
+                    <input type="number" name="inferencesteps" min="1" max="40" value="40">
+
+                    <label for="sampler">Sampler</label>
+                    <select name="sampler">
+                      <option value="k_lms">k_lms</option>
+                      <option value="k_euler">k_euler</option>
+                      <option value="k_euler_ancestral">k_euler_ancestral</option>
+                    </select>
+
+                    </br>
+
+                    <button type="submit">Generate</button>
+                </form>
+            </div>
+
+            <div class="right-pane">
+                <h1>Filter</h1>
+                <p>이미지에 필터를 씌워줍니다.</p>
+                <form action="/convert" method="POST" enctype="multipart/form-data">
+                    <label for="img1">Source Image</label>
+                    <input type="file" name="img1" placeholder="Enter some text" required>
+
+                    <button type="submit">Convert</button>
+                </form>
+            </div>
         </div>
     </div>
 </body>

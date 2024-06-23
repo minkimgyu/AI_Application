@@ -6,18 +6,23 @@ from werkzeug.utils import secure_filename
 # 외부 스크립트 폴더 경로 추가
 sys.path.append(os.path.join(os.path.dirname(__file__), 'stable-diffusion-pytorch'))
 sys.path.append(os.path.join(os.path.dirname(__file__), 'CartoonGAN-Test-Pytorch-Torch'))
+sys.path.append(os.path.join(os.path.dirname(__file__), 'style-transfer-pytorch'))
+
 from create import create_img
 from convert import convert_image
+from style_transfer import merge_style
 
 app = Flask(__name__)
 
 # 업로드 폴더 설정
 GENERATED_FOLDER = 'static/generated_images'
 CONVERTED_FOLDER = 'static/converted_images'
+MERGED_FOLDER = 'static/merged_images'
 UPLOADED_FOLDER = 'static/uploaded_images'
 
 app.config['GENERATED_FOLDER'] = GENERATED_FOLDER
 app.config['CONVERTED_FOLDER'] = CONVERTED_FOLDER
+app.config['MERGED_FOLDER'] = MERGED_FOLDER
 app.config['UPLOADED_FOLDER'] = UPLOADED_FOLDER
 
 def return_filepath(path, name):
@@ -75,6 +80,34 @@ def convert():
                            style3_txt=styles[2], image3_url=output_paths[2],
                            style4_txt=styles[3], image4_url=output_paths[3]
            )
+
+@app.route('/merge', methods=['POST'])
+def merge():
+    img2 = request.files['img2']
+    img3 = request.files['img3']
+
+    img_path2 = return_filepath(UPLOADED_FOLDER, img2.filename)
+    img_path3 = return_filepath(UPLOADED_FOLDER, img3.filename)
+
+    img2.save(img_path2)
+    img3.save(img_path3)
+
+    merge_rates = ['0%', '33%', '66%', '100%']
+
+    output_paths = []
+
+    for rate in merge_rates:
+        output_path = return_filepath(MERGED_FOLDER, img2.filename + '_' + rate)
+        output_paths.append(output_path)
+
+    merge_style(img_path2, img_path3, output_paths)
+
+    return render_template('convert.html',
+                           style1_txt=merge_rates[0], image1_url=output_paths[0],
+                           style2_txt=merge_rates[1], image2_url=output_paths[1],
+                           style3_txt=merge_rates[2], image3_url=output_paths[2],
+                           style4_txt=merge_rates[3], image4_url=output_paths[3]
+                           )
 
 if __name__ == '__main__':
     app.run(debug=True)
