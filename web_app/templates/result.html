@@ -7,15 +7,11 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <div class="container">
+    <div class="column_container">
         <h1>Generated Image</h1>
-        <img src="{{ image_url }}" alt="Generated Image">
-        <p>{{ user_text }}</p>
+        <img src="{{ filepath }}" alt="Generated Image">
+        <h2>{{ prompt }}</h2>
 
-        <form action="/convert" method="post">
-            <input type="hidden" name="user_text" value="{{ user_text }}">
-            <button type="submit">Convert and Display</button>
-        </form>
         <a href="/" class="btn">Go Back</a>
 
     </div>

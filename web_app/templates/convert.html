@@ -7,10 +7,29 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <div class="container">
-        <h1>Converted Image</h1>
-        <p>{{ user_text }}</p>
-        <img src="{{ image_url }}" alt="Converted Image">
+    <div class="column_container">
+        <h1>Filtered Image</h1>
+        <div class="row_container">
+            <div class="column_container">
+                <img src="{{ image1_url }}" alt="Converted Image">
+                <h2>{{ style1_txt }}</h2>
+            </div>
+
+            <div class="column_container">
+                <img src="{{ image2_url }}" alt="Converted Image">
+                <h2>{{ style2_txt }}</h2>
+            </div>
+
+             <div class="column_container">
+                <img src="{{ image3_url }}" alt="Converted Image">
+                 <h2>{{ style3_txt }}</h2>
+            </div>
+
+             <div class="column_container">
+                <img src="{{ image4_url }}" alt="Converted Image">
+                 <h2>{{ style4_txt }}</h2>
+            </div>
+        </div>
         <br/>
          <a href="/" class="btn">Go Back</a>
     </div>

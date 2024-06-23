@@ -12,17 +12,22 @@ from convert import convert_image
 app = Flask(__name__)
 
 # 업로드 폴더 설정
-UPLOAD_FOLDER = 'static/generated_images'
+GENERATED_FOLDER = 'static/generated_images'
 CONVERTED_FOLDER = 'static/converted_images'
+UPLOADED_FOLDER = 'static/uploaded_images'
 
-if not os.path.exists(UPLOAD_FOLDER):
-    os.makedirs(UPLOAD_FOLDER)
-
-if not os.path.exists(CONVERTED_FOLDER):
-    os.makedirs(CONVERTED_FOLDER)
-
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['GENERATED_FOLDER'] = GENERATED_FOLDER
 app.config['CONVERTED_FOLDER'] = CONVERTED_FOLDER
+app.config['UPLOADED_FOLDER'] = UPLOADED_FOLDER
+
+def return_filepath(path, name):
+    replaced_name = name.replace(" ", "_")
+    filename = secure_filename(f"{replaced_name}.png")  # 텍스트의 앞 10자를 파일 이름으로 사용
+    return os.path.join(path, filename)
+
+def exist_path(filepath):
+    print(filepath)
+    print(os.path.exists(filepath))
 
 @app.route('/')
 def home():
@@ -30,42 +35,46 @@ def home():
 
 @app.route('/result', methods=['POST'])
 def result():
-    user_text = request.form['user_text']
-    image = create_img(user_text)
+    prompt = request.form['prompt']
+    img = request.files['img']
+    n_inference_steps = request.form['inferencesteps']
+    sampler = request.form['sampler']
 
-    # 파일 이름 생성 및 저장
-    filename = secure_filename(f"{user_text}.png")  # 텍스트의 앞 10자를 파일 이름으로 사용
-    filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+    img_path = return_filepath(UPLOADED_FOLDER, img.filename)
+    img.save(img_path)
+
+    filepath = return_filepath(GENERATED_FOLDER, prompt)
+    print(exist_path(filepath))
+
+    image = create_img(prompt, img_path, int(n_inference_steps), sampler)
     image.save(filepath, 'PNG')
 
-    image_url = url_for('static', filename=f'generated_images/{filename}')
-    return render_template('result.html', user_text=user_text, image_url=image_url)
+    return render_template('result.html', prompt=prompt, filepath=filepath)
 
 
 @app.route('/convert', methods=['POST'])
 def convert():
-    user_text = request.form['user_text']
+    img = request.files['img1']
 
-    print(user_text)
-    file = user_text.replace(" ", "_")
-    print(file)
+    img_path = return_filepath(UPLOADED_FOLDER, img.filename)
+    img.save(img_path)
 
-    style = 'Shinkai'
+    styles = ['Shinkai', 'Paprika', 'Hosoda', 'Hayao']
 
-    filename = secure_filename(f"{file}.png")  # 텍스트의 앞 10자를 파일 이름으로 사용
+    output_paths = []
 
-    # 파일 변환
-    filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+    for style in styles:
+        output_path = return_filepath(CONVERTED_FOLDER, img.filename + '_' + style)
+        convert_image(img_path, style, output_path)
 
+        output_paths.append(output_path)
 
-    # 파일 저장
-    output_filename = secure_filename(f"{file}_{style}.jpg")  # 텍스트의 앞 10자를 파일 이름으로 사용
-    output_path = url_for('static', filename=f'converted_images')
-
-    # 파일을 저장하고 경로만 반환해준다.
-    convert_image(filepath, output_filename, style, output_path)
-
-    return render_template('convert.html', user_text=user_text, image_url=output_path + '/' + output_filename)
+    return render_template('convert.html',
+                           style1_txt=styles[0], image1_url=output_paths[0],
+                           style2_txt=styles[1], image2_url=output_paths[1],
+                           style3_txt=styles[2], image3_url=output_paths[2],
+                           style4_txt=styles[3], image4_url=output_paths[3]
+           )
 
 if __name__ == '__main__':
     app.run(debug=True)
